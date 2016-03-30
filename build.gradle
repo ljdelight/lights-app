@@ -1,0 +1,59 @@
+//
+// Copyright (c) Lucas Burson
+// Licensed under GNU General Public License 3.0+. See <www.gnu.org/licenses/>.
+//
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'findbugs'
+
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
+
+findbugs {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "low"
+    excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
+}
+
+dependencies {
+    testCompile "junit:junit:4.12"
+
+    compile "org.apache.logging.log4j:log4j-api:2.5"
+    compile "org.apache.logging.log4j:log4j-core:2.5"
+    compile "org.slf4j:slf4j-simple:1.7.18"
+    compile "org.apache.thrift:libthrift:0.9.3"
+    compile 'org.postgresql:postgresql:9.4.1208.jre7'
+}
+
+task copyToLibTask(type: Copy) {
+    into "$buildDir/output/lib"
+    from configurations.compile
+}
+
+task release {
+    dependsOn build
+    dependsOn copyToLibTask
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from 'build/docs/javadoc'
+    classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}

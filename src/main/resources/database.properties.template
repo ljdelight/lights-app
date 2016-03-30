@@ -1,0 +1,11 @@
+#
+# Copyright (c) Lucas Burson
+# Licensed under GNU General Public License 3.0+. See <www.gnu.org/licenses/>.
+#
+
+db.url = jdbc:postgresql://thehostgoeshere
+db.port = 29921
+db.database = thedatabase
+
+db.user = mydbuser
+db.password = S*mecrazyp@$$wordh3re

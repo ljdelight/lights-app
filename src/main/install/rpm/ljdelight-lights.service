@@ -1,0 +1,21 @@
+#
+# Copyright (c) Lucas Burson
+# Licensed under GNU General Public License 3.0+. See <www.gnu.org/licenses/>.
+#
+
+[Unit]
+Description=Lights service for database access
+After=syslog.target network.target
+
+[Service]
+Type=simple
+Environment=PORT=12345
+Environment=CLASSPATH=/opt/ljdelight/lights/*:/opt/ljdelight/lights/jars/*
+
+ExecStart=/usr/bin/java -classpath "${CLASSPATH}" com.ljdelight.lights.LightsServer ${PORT}
+Restart=on-failure
+RestartSec=1s
+SuccessExitStatus=0 SIGHUP SIGINT SIGTERM SIGPIPE
+
+[Install]
+WantedBy=multi-user.target
