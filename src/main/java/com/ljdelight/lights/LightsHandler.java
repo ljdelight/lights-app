@@ -89,8 +89,8 @@ public class LightsHandler implements Lights.Iface {
                     .prepareStatement("SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
                             + "ST_DWithin(the_geom, ST_SetSRID(ST_MakePoint(?,?), " + "4326), ?, false) "
                             + "LIMIT 5000;");
-            statement.setString(1, Double.toString(center.location.getLng()));
-            statement.setString(2, Double.toString(center.location.getLat()));
+            statement.setDouble(1, center.location.getLng());
+            statement.setDouble(2, center.location.getLat());
             statement.setInt(3, center.radiusInMeters);
 
             logger.debug(statement);
