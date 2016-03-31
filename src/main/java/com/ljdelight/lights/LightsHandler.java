@@ -27,7 +27,7 @@ import com.ljdelight.lights.generated.Location;
 
 public class LightsHandler implements Lights.Iface {
     private static final Logger logger = LogManager.getLogger(LightsHandler.class);
-    private static Connection s_connection = null;
+    private static volatile Connection s_connection = null;
 
     private static Connection connect() throws SQLException {
         if (s_connection == null) {
@@ -113,6 +113,8 @@ public class LightsHandler implements Lights.Iface {
     }
 
     private static class Configuration extends Properties {
+        private static final long serialVersionUID = 6455585423012660835L;
+
         public String getProperty(final String key) {
             final String property = super.getProperty(key);
             if (property == null) {
