@@ -37,8 +37,7 @@ public class LightsHandler implements Lights.Iface {
                 if (s_connection == null) {
                     logger.info("Database connection is not cached; connecting");
                     Properties p = new Configuration();
-                    try (InputStream stream =
-                            LightsHandler.class.getResourceAsStream("/database.properties")) {
+                    try (InputStream stream = LightsHandler.class.getResourceAsStream("/database.properties")) {
                         p.load(stream);
                     } catch (IOException e) {
                         throw new RuntimeException("Could not read database.properties", e);
@@ -65,32 +64,31 @@ public class LightsHandler implements Lights.Iface {
 
     @Override
     public List<Location> getAllLocations() throws TException {
-        try {
-            List<Location> locations = new ArrayList<>();
-
-            ResultSet set = LightsHandler.connect().createStatement().executeQuery(
-                    "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights");
-            while (set.next()) {
-                String lat = set.getString("lat");
-                String lng = set.getString("lng");
-                locations.add(new Location(Double.parseDouble(lat), Double.parseDouble(lng)));
+        List<Location> locations = new ArrayList<>();
+        try (Statement statement = LightsHandler.connect().createStatement()) {
+            String query = "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights";
+            try (ResultSet set = statement.executeQuery(query)) {
+                while (set.next()) {
+                    String lat = set.getString("lat");
+                    String lng = set.getString("lng");
+                    locations.add(new Location(Double.parseDouble(lat), Double.parseDouble(lng)));
+                }
             }
-            set.close();
             return locations;
         } catch (SQLException e) {
             logger.error("Failed to connect to db");
             throw new TException(e);
-        }
+        } 
     }
 
     @Override
     public List<Location> getLocationsNear(Center center) throws TException {
-
+        PreparedStatement statement = null;
         try {
-            PreparedStatement statement = LightsHandler.connect().prepareStatement(
-                    "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
-                            + "ST_DWithin(the_geom, ST_SetSRID(ST_MakePoint(?,?), "
-                            + "4326), ?, false) " + "LIMIT 5000;");
+            statement = LightsHandler.connect()
+                    .prepareStatement("SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
+                            + "ST_DWithin(the_geom, ST_SetSRID(ST_MakePoint(?,?), " + "4326), ?, false) "
+                            + "LIMIT 5000;");
             statement.setString(1, Double.toString(center.location.getLng()));
             statement.setString(2, Double.toString(center.location.getLat()));
             statement.setInt(3, center.radiusInMeters);
@@ -107,6 +105,14 @@ public class LightsHandler implements Lights.Iface {
         } catch (SQLException e) {
             logger.error("Failed to connect to db");
             throw new TException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    // Do nothing in this case
+                }
+            }
         }
     }
 
