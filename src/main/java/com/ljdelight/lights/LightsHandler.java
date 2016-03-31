@@ -6,6 +6,7 @@
 package com.ljdelight.lights;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,7 +38,9 @@ public class LightsHandler implements Lights.Iface {
                     logger.info("Database connection is not cached; connecting");
                     Properties p = new Configuration();
                     try {
-                        p.load(LightsHandler.class.getResourceAsStream("/database.properties"));
+                        InputStream stream = LightsHandler.class.getResourceAsStream("/database.properties");
+                        p.load(stream);
+                        stream.close();
                     } catch (IOException e) {
                         throw new RuntimeException("Could not read database.properties", e);
                     }
