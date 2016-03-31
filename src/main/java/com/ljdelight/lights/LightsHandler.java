@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -59,21 +60,13 @@ public class LightsHandler implements Lights.Iface {
         return s_connection;
     }
 
-    private ResultSet executeQuery(String q) throws SQLException {
-        Connection c = connect();
-
-        Statement stmt = c.createStatement();
-        ResultSet set = stmt.executeQuery(q);
-        return set;
-    }
-
     @Override
     public List<Location> getAllLocations() throws TException {
         try {
             List<Location> locations = new ArrayList<>();
 
-            String sql = "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights";
-            ResultSet set = executeQuery(sql);
+            ResultSet set = LightsHandler.connect().createStatement().executeQuery(
+                    "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights");
             while (set.next()) {
                 String lat = set.getString("lat");
                 String lng = set.getString("lng");
@@ -91,14 +84,16 @@ public class LightsHandler implements Lights.Iface {
     public List<Location> getLocationsNear(Center center) throws TException {
 
         try {
-            String sql = String.format(
-                    "SELECT " + "ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat " + "FROM lights " + "WHERE "
-                            + "ST_DWithin(" + "   the_geom, " + "   ST_SetSRID(" + "      ST_MakePoint(%s, %s), "
-                            + "      4326), " + "   %d, " + "   false) " + "LIMIT 5000;",
-                    Double.toString(center.location.getLng()), Double.toString(center.location.getLat()),
-                    center.radiusInMeters);
-            logger.error(sql);
-            ResultSet set = executeQuery(sql);
+            PreparedStatement statement = LightsHandler.connect().prepareStatement(
+                    "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
+                            + "ST_DWithin(the_geom, ST_SetSRID(ST_MakePoint(?,?), "
+                            + "4326), ?, false) " + "LIMIT 5000;");
+            statement.setString(1, Double.toString(center.location.getLng()));
+            statement.setString(2, Double.toString(center.location.getLat()));
+            statement.setInt(3, center.radiusInMeters);
+
+            logger.debug(statement);
+            ResultSet set = statement.executeQuery();
 
             List<Location> locations = new ArrayList<>();
             while (set.next()) {
