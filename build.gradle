@@ -16,7 +16,7 @@ task wrapper(type: Wrapper) {
 }
 
 findbugs {
-    ignoreFailures = true
+    ignoreFailures = false
     effort = "max"
     reportLevel = "low"
     excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")

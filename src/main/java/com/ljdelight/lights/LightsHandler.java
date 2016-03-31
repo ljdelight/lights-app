@@ -6,9 +6,11 @@
 package com.ljdelight.lights;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,7 +29,7 @@ import com.ljdelight.lights.generated.Location;
 
 public class LightsHandler implements Lights.Iface {
     private static final Logger logger = LogManager.getLogger(LightsHandler.class);
-    private static Connection s_connection = null;
+    private static volatile Connection s_connection = null;
 
     private static Connection connect() throws SQLException {
         if (s_connection == null) {
@@ -35,11 +37,12 @@ public class LightsHandler implements Lights.Iface {
                 if (s_connection == null) {
                     logger.info("Database connection is not cached; connecting");
                     Properties p = new Configuration();
-                    try {
-                        p.load(LightsHandler.class.getResourceAsStream("/database.properties"));
+                    try (InputStream stream = LightsHandler.class.getResourceAsStream("/database.properties")) {
+                        p.load(stream);
                     } catch (IOException e) {
                         throw new RuntimeException("Could not read database.properties", e);
                     }
+
                     String url = p.getProperty("db.url");
                     String port = p.getProperty("db.port");
                     String db = p.getProperty("db.database");
@@ -59,46 +62,39 @@ public class LightsHandler implements Lights.Iface {
         return s_connection;
     }
 
-    private ResultSet executeQuery(String q) throws SQLException {
-        Connection c = connect();
-
-        Statement stmt = c.createStatement();
-        ResultSet set = stmt.executeQuery(q);
-        return set;
-    }
-
     @Override
     public List<Location> getAllLocations() throws TException {
-        try {
-            List<Location> locations = new ArrayList<>();
-
-            String sql = "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights";
-            ResultSet set = executeQuery(sql);
-            while (set.next()) {
-                String lat = set.getString("lat");
-                String lng = set.getString("lng");
-                locations.add(new Location(Double.parseDouble(lat), Double.parseDouble(lng)));
+        List<Location> locations = new ArrayList<>();
+        try (Statement statement = LightsHandler.connect().createStatement()) {
+            String query = "SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights";
+            try (ResultSet set = statement.executeQuery(query)) {
+                while (set.next()) {
+                    String lat = set.getString("lat");
+                    String lng = set.getString("lng");
+                    locations.add(new Location(Double.parseDouble(lat), Double.parseDouble(lng)));
+                }
             }
-            set.close();
             return locations;
         } catch (SQLException e) {
             logger.error("Failed to connect to db");
             throw new TException(e);
-        }
+        } 
     }
 
     @Override
     public List<Location> getLocationsNear(Center center) throws TException {
-
+        PreparedStatement statement = null;
         try {
-            String sql = String.format(
-                    "SELECT " + "ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat " + "FROM lights " + "WHERE "
-                            + "ST_DWithin(" + "   the_geom, " + "   ST_SetSRID(" + "      ST_MakePoint(%s, %s), "
-                            + "      4326), " + "   %d, " + "   false) " + "LIMIT 5000;",
-                    Double.toString(center.location.getLng()), Double.toString(center.location.getLat()),
-                    center.radiusInMeters);
-            logger.error(sql);
-            ResultSet set = executeQuery(sql);
+            statement = LightsHandler.connect()
+                    .prepareStatement("SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
+                            + "ST_DWithin(the_geom, ST_SetSRID(ST_MakePoint(?,?), " + "4326), ?, false) "
+                            + "LIMIT 5000;");
+            statement.setDouble(1, center.location.getLng());
+            statement.setDouble(2, center.location.getLat());
+            statement.setInt(3, center.radiusInMeters);
+
+            logger.debug(statement);
+            ResultSet set = statement.executeQuery();
 
             List<Location> locations = new ArrayList<>();
             while (set.next()) {
@@ -109,10 +105,20 @@ public class LightsHandler implements Lights.Iface {
         } catch (SQLException e) {
             logger.error("Failed to connect to db");
             throw new TException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    // Do nothing in this case
+                }
+            }
         }
     }
 
     private static class Configuration extends Properties {
+        private static final long serialVersionUID = 6455585423012660835L;
+
         public String getProperty(final String key) {
             final String property = super.getProperty(key);
             if (property == null) {
