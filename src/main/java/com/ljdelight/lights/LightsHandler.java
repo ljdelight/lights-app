@@ -37,13 +37,13 @@ public class LightsHandler implements Lights.Iface {
                 if (s_connection == null) {
                     logger.info("Database connection is not cached; connecting");
                     Properties p = new Configuration();
-                    try {
-                        InputStream stream = LightsHandler.class.getResourceAsStream("/database.properties");
+                    try (InputStream stream =
+                            LightsHandler.class.getResourceAsStream("/database.properties")) {
                         p.load(stream);
-                        stream.close();
                     } catch (IOException e) {
                         throw new RuntimeException("Could not read database.properties", e);
                     }
+
                     String url = p.getProperty("db.url");
                     String port = p.getProperty("db.port");
                     String db = p.getProperty("db.database");
