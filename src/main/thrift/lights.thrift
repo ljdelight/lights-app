@@ -10,6 +10,11 @@ struct Location {
     2: required double lng;
 }
 
+struct TaggedLocation {
+    1: required i64 uid;
+    2: required Location location;
+}
+
 struct Center {
     1: required Location location;
     16: optional i32 radiusInMeters = 65000;
@@ -17,5 +22,5 @@ struct Center {
 
 service Lights {
     list<Location> getAllLocations(),
-    list<Location> getLocationsNear(1:Center center)
+    list<TaggedLocation> getLocationsNear(1:Center center)
 }

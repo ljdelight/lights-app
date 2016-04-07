@@ -39,7 +39,7 @@ public class Lights {
 
     public List<Location> getAllLocations() throws org.apache.thrift.TException;
 
-    public List<Location> getLocationsNear(Center center) throws org.apache.thrift.TException;
+    public List<TaggedLocation> getLocationsNear(Center center) throws org.apache.thrift.TException;
 
   }
 
@@ -93,7 +93,7 @@ public class Lights {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getAllLocations failed: unknown result");
     }
 
-    public List<Location> getLocationsNear(Center center) throws org.apache.thrift.TException
+    public List<TaggedLocation> getLocationsNear(Center center) throws org.apache.thrift.TException
     {
       send_getLocationsNear(center);
       return recv_getLocationsNear();
@@ -106,7 +106,7 @@ public class Lights {
       sendBase("getLocationsNear", args);
     }
 
-    public List<Location> recv_getLocationsNear() throws org.apache.thrift.TException
+    public List<TaggedLocation> recv_getLocationsNear() throws org.apache.thrift.TException
     {
       getLocationsNear_result result = new getLocationsNear_result();
       receiveBase(result, "getLocationsNear");
@@ -185,7 +185,7 @@ public class Lights {
         prot.writeMessageEnd();
       }
 
-      public List<Location> getResult() throws org.apache.thrift.TException {
+      public List<TaggedLocation> getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -322,7 +322,7 @@ public class Lights {
       }
     }
 
-    public static class getLocationsNear<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, getLocationsNear_args, List<Location>> {
+    public static class getLocationsNear<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, getLocationsNear_args, List<TaggedLocation>> {
       public getLocationsNear() {
         super("getLocationsNear");
       }
@@ -331,10 +331,10 @@ public class Lights {
         return new getLocationsNear_args();
       }
 
-      public AsyncMethodCallback<List<Location>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<List<TaggedLocation>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<List<Location>>() { 
-          public void onComplete(List<Location> o) {
+        return new AsyncMethodCallback<List<TaggedLocation>>() { 
+          public void onComplete(List<TaggedLocation> o) {
             getLocationsNear_result result = new getLocationsNear_result();
             result.success = o;
             try {
@@ -368,7 +368,7 @@ public class Lights {
         return false;
       }
 
-      public void start(I iface, getLocationsNear_args args, org.apache.thrift.async.AsyncMethodCallback<List<Location>> resultHandler) throws TException {
+      public void start(I iface, getLocationsNear_args args, org.apache.thrift.async.AsyncMethodCallback<List<TaggedLocation>> resultHandler) throws TException {
         iface.getLocationsNear(args.center,resultHandler);
       }
     }
@@ -1415,7 +1415,7 @@ public class Lights {
       schemes.put(TupleScheme.class, new getLocationsNear_resultTupleSchemeFactory());
     }
 
-    public List<Location> success; // required
+    public List<TaggedLocation> success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1481,7 +1481,7 @@ public class Lights {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Location.class))));
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TaggedLocation.class))));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getLocationsNear_result.class, metaDataMap);
     }
@@ -1490,7 +1490,7 @@ public class Lights {
     }
 
     public getLocationsNear_result(
-      List<Location> success)
+      List<TaggedLocation> success)
     {
       this();
       this.success = success;
@@ -1501,9 +1501,9 @@ public class Lights {
      */
     public getLocationsNear_result(getLocationsNear_result other) {
       if (other.isSetSuccess()) {
-        List<Location> __this__success = new ArrayList<Location>(other.success.size());
-        for (Location other_element : other.success) {
-          __this__success.add(new Location(other_element));
+        List<TaggedLocation> __this__success = new ArrayList<TaggedLocation>(other.success.size());
+        for (TaggedLocation other_element : other.success) {
+          __this__success.add(new TaggedLocation(other_element));
         }
         this.success = __this__success;
       }
@@ -1522,22 +1522,22 @@ public class Lights {
       return (this.success == null) ? 0 : this.success.size();
     }
 
-    public java.util.Iterator<Location> getSuccessIterator() {
+    public java.util.Iterator<TaggedLocation> getSuccessIterator() {
       return (this.success == null) ? null : this.success.iterator();
     }
 
-    public void addToSuccess(Location elem) {
+    public void addToSuccess(TaggedLocation elem) {
       if (this.success == null) {
-        this.success = new ArrayList<Location>();
+        this.success = new ArrayList<TaggedLocation>();
       }
       this.success.add(elem);
     }
 
-    public List<Location> getSuccess() {
+    public List<TaggedLocation> getSuccess() {
       return this.success;
     }
 
-    public getLocationsNear_result setSuccess(List<Location> success) {
+    public getLocationsNear_result setSuccess(List<TaggedLocation> success) {
       this.success = success;
       return this;
     }
@@ -1563,7 +1563,7 @@ public class Lights {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((List<Location>)value);
+          setSuccess((List<TaggedLocation>)value);
         }
         break;
 
@@ -1721,11 +1721,11 @@ public class Lights {
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
                   org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
-                  struct.success = new ArrayList<Location>(_list8.size);
-                  Location _elem9;
+                  struct.success = new ArrayList<TaggedLocation>(_list8.size);
+                  TaggedLocation _elem9;
                   for (int _i10 = 0; _i10 < _list8.size; ++_i10)
                   {
-                    _elem9 = new Location();
+                    _elem9 = new TaggedLocation();
                     _elem9.read(iprot);
                     struct.success.add(_elem9);
                   }
@@ -1755,7 +1755,7 @@ public class Lights {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Location _iter11 : struct.success)
+            for (TaggedLocation _iter11 : struct.success)
             {
               _iter11.write(oprot);
             }
@@ -1788,7 +1788,7 @@ public class Lights {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Location _iter12 : struct.success)
+            for (TaggedLocation _iter12 : struct.success)
             {
               _iter12.write(oprot);
             }
@@ -1803,11 +1803,11 @@ public class Lights {
         if (incoming.get(0)) {
           {
             org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<Location>(_list13.size);
-            Location _elem14;
+            struct.success = new ArrayList<TaggedLocation>(_list13.size);
+            TaggedLocation _elem14;
             for (int _i15 = 0; _i15 < _list13.size; ++_i15)
             {
-              _elem14 = new Location();
+              _elem14 = new TaggedLocation();
               _elem14.read(iprot);
               struct.success.add(_elem14);
             }
