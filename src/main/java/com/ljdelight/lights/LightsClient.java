@@ -20,6 +20,7 @@ import org.apache.thrift.transport.TTransportException;
 import com.ljdelight.lights.generated.Center;
 import com.ljdelight.lights.generated.Lights;
 import com.ljdelight.lights.generated.Location;
+import com.ljdelight.lights.generated.TaggedLocation;
 
 public class LightsClient {
     private static final Logger logger = LogManager.getLogger(LightsClient.class);
@@ -42,9 +43,9 @@ public class LightsClient {
             TProtocol protocol = new TBinaryProtocol(transport);
             Lights.Client client = new Lights.Client(protocol);
 
-            List<Location> locations = client.getLocationsNear(new Center(new Location(37.6889, -97.3361)));
-            for (Location location : locations) {
-                System.out.println(String.format("%f,%f", location.getLat(), location.getLng()));
+            List<TaggedLocation> locations = client.getLocationsNear(new Center(new Location(37.6889, -97.3361)));
+            for (TaggedLocation location : locations) {
+                System.out.println(String.format("%d,%f,%f", location.uid, location.location.getLat(), location.location.getLng()));
             }
             System.out.println("Found " + locations.size());
             transport.close();

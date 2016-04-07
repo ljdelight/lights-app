@@ -26,6 +26,7 @@ import org.apache.thrift.TException;
 import com.ljdelight.lights.generated.Center;
 import com.ljdelight.lights.generated.Lights;
 import com.ljdelight.lights.generated.Location;
+import com.ljdelight.lights.generated.TaggedLocation;
 
 public class LightsHandler implements Lights.Iface {
     private static final Logger logger = LogManager.getLogger(LightsHandler.class);
@@ -82,11 +83,11 @@ public class LightsHandler implements Lights.Iface {
     }
 
     @Override
-    public List<Location> getLocationsNear(Center center) throws TException {
+    public List<TaggedLocation> getLocationsNear(Center center) throws TException {
         PreparedStatement statement = null;
         try {
             statement = LightsHandler.connect()
-                    .prepareStatement("SELECT ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
+                    .prepareStatement("SELECT id, ST_X(the_geom) AS lng, ST_Y(the_geom) AS lat FROM lights WHERE "
                             + "ST_DWithin(the_geom, ST_SetSRID(ST_MakePoint(?,?), " + "4326), ?, false) "
                             + "LIMIT 5000;");
             statement.setDouble(1, center.location.getLng());
@@ -96,9 +97,10 @@ public class LightsHandler implements Lights.Iface {
             logger.debug(statement);
             ResultSet set = statement.executeQuery();
 
-            List<Location> locations = new ArrayList<>();
+            List<TaggedLocation> locations = new ArrayList<>();
             while (set.next()) {
-                locations.add(new Location(set.getDouble("lat"), set.getDouble("lng")));
+                locations.add(new TaggedLocation(set.getLong("id"),
+                        new Location(set.getDouble("lat"), set.getDouble("lng"))));
             }
             set.close();
             return locations;
