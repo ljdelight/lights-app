@@ -1,0 +1,21 @@
+language: java
+sudo: true
+jdk:
+  - oraclejdk8
+
+before_install:
+  # Install fpm
+  - sudo apt-get update
+  - sudo apt-get install -y curl rpm
+  - curl -L https://get.rvm.io | bash -s stable
+  - source ~/.rvm/scripts/rvm
+  - rvm reload
+  - rvm requirements
+  - rvm install ruby
+  - rvm use ruby --default
+  - rvm rubygems current
+  - sleep 0.1
+  - gem install fpm
+
+script:
+  - make || exit 1
