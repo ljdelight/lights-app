@@ -21,7 +21,7 @@ buildrpm: jar
 	install --mode=0444 LICENSE build/rpm/opt/ljdelight/lights/
 	install --mode=0644 src/main/install/rpm/ljdelight-lights.service build/rpm/etc/systemd/system/
 	fpm -s dir -t rpm -C build/rpm --force \
-		--version 0.1.6 --name ljdelight-lights --architecture noarch \
+		--version 0.1.7 --name ljdelight-lights --architecture noarch \
 		--before-install src/main/install/rpm/preinst.sh \
 		--after-install src/main/install/rpm/postinst.sh \
 		--before-remove src/main/install/rpm/prerm.sh \

@@ -41,6 +41,8 @@ public class Lights {
 
     public List<TaggedLocation> getLocationsNear(Center center) throws org.apache.thrift.TException;
 
+    public List<TaggedLocationWithMeta> getLocationsWithMetaNear(Center center) throws org.apache.thrift.TException;
+
   }
 
   public interface AsyncIface {
@@ -48,6 +50,8 @@ public class Lights {
     public void getAllLocations(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void getLocationsNear(Center center, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+
+    public void getLocationsWithMetaNear(Center center, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -114,6 +118,29 @@ public class Lights {
         return result.success;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getLocationsNear failed: unknown result");
+    }
+
+    public List<TaggedLocationWithMeta> getLocationsWithMetaNear(Center center) throws org.apache.thrift.TException
+    {
+      send_getLocationsWithMetaNear(center);
+      return recv_getLocationsWithMetaNear();
+    }
+
+    public void send_getLocationsWithMetaNear(Center center) throws org.apache.thrift.TException
+    {
+      getLocationsWithMetaNear_args args = new getLocationsWithMetaNear_args();
+      args.setCenter(center);
+      sendBase("getLocationsWithMetaNear", args);
+    }
+
+    public List<TaggedLocationWithMeta> recv_getLocationsWithMetaNear() throws org.apache.thrift.TException
+    {
+      getLocationsWithMetaNear_result result = new getLocationsWithMetaNear_result();
+      receiveBase(result, "getLocationsWithMetaNear");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getLocationsWithMetaNear failed: unknown result");
     }
 
   }
@@ -195,6 +222,38 @@ public class Lights {
       }
     }
 
+    public void getLocationsWithMetaNear(Center center, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      getLocationsWithMetaNear_call method_call = new getLocationsWithMetaNear_call(center, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class getLocationsWithMetaNear_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private Center center;
+      public getLocationsWithMetaNear_call(Center center, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.center = center;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("getLocationsWithMetaNear", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        getLocationsWithMetaNear_args args = new getLocationsWithMetaNear_args();
+        args.setCenter(center);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public List<TaggedLocationWithMeta> getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_getLocationsWithMetaNear();
+      }
+    }
+
   }
 
   public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
@@ -210,6 +269,7 @@ public class Lights {
     private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
       processMap.put("getAllLocations", new getAllLocations());
       processMap.put("getLocationsNear", new getLocationsNear());
+      processMap.put("getLocationsWithMetaNear", new getLocationsWithMetaNear());
       return processMap;
     }
 
@@ -253,6 +313,26 @@ public class Lights {
       }
     }
 
+    public static class getLocationsWithMetaNear<I extends Iface> extends org.apache.thrift.ProcessFunction<I, getLocationsWithMetaNear_args> {
+      public getLocationsWithMetaNear() {
+        super("getLocationsWithMetaNear");
+      }
+
+      public getLocationsWithMetaNear_args getEmptyArgsInstance() {
+        return new getLocationsWithMetaNear_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public getLocationsWithMetaNear_result getResult(I iface, getLocationsWithMetaNear_args args) throws org.apache.thrift.TException {
+        getLocationsWithMetaNear_result result = new getLocationsWithMetaNear_result();
+        result.success = iface.getLocationsWithMetaNear(args.center);
+        return result;
+      }
+    }
+
   }
 
   public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
@@ -268,6 +348,7 @@ public class Lights {
     private static <I extends AsyncIface> Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
       processMap.put("getAllLocations", new getAllLocations());
       processMap.put("getLocationsNear", new getLocationsNear());
+      processMap.put("getLocationsWithMetaNear", new getLocationsWithMetaNear());
       return processMap;
     }
 
@@ -370,6 +451,57 @@ public class Lights {
 
       public void start(I iface, getLocationsNear_args args, org.apache.thrift.async.AsyncMethodCallback<List<TaggedLocation>> resultHandler) throws TException {
         iface.getLocationsNear(args.center,resultHandler);
+      }
+    }
+
+    public static class getLocationsWithMetaNear<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, getLocationsWithMetaNear_args, List<TaggedLocationWithMeta>> {
+      public getLocationsWithMetaNear() {
+        super("getLocationsWithMetaNear");
+      }
+
+      public getLocationsWithMetaNear_args getEmptyArgsInstance() {
+        return new getLocationsWithMetaNear_args();
+      }
+
+      public AsyncMethodCallback<List<TaggedLocationWithMeta>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<List<TaggedLocationWithMeta>>() { 
+          public void onComplete(List<TaggedLocationWithMeta> o) {
+            getLocationsWithMetaNear_result result = new getLocationsWithMetaNear_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
+          }
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            getLocationsWithMetaNear_result result = new getLocationsWithMetaNear_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, getLocationsWithMetaNear_args args, org.apache.thrift.async.AsyncMethodCallback<List<TaggedLocationWithMeta>> resultHandler) throws TException {
+        iface.getLocationsWithMetaNear(args.center,resultHandler);
       }
     }
 
@@ -939,14 +1071,14 @@ public class Lights {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
-                  struct.success = new ArrayList<Location>(_list0.size);
-                  Location _elem1;
-                  for (int _i2 = 0; _i2 < _list0.size; ++_i2)
+                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
+                  struct.success = new ArrayList<Location>(_list8.size);
+                  Location _elem9;
+                  for (int _i10 = 0; _i10 < _list8.size; ++_i10)
                   {
-                    _elem1 = new Location();
-                    _elem1.read(iprot);
-                    struct.success.add(_elem1);
+                    _elem9 = new Location();
+                    _elem9.read(iprot);
+                    struct.success.add(_elem9);
                   }
                   iprot.readListEnd();
                 }
@@ -974,9 +1106,9 @@ public class Lights {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Location _iter3 : struct.success)
+            for (Location _iter11 : struct.success)
             {
-              _iter3.write(oprot);
+              _iter11.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -1007,9 +1139,9 @@ public class Lights {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Location _iter4 : struct.success)
+            for (Location _iter12 : struct.success)
             {
-              _iter4.write(oprot);
+              _iter12.write(oprot);
             }
           }
         }
@@ -1021,14 +1153,14 @@ public class Lights {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<Location>(_list5.size);
-            Location _elem6;
-            for (int _i7 = 0; _i7 < _list5.size; ++_i7)
+            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<Location>(_list13.size);
+            Location _elem14;
+            for (int _i15 = 0; _i15 < _list13.size; ++_i15)
             {
-              _elem6 = new Location();
-              _elem6.read(iprot);
-              struct.success.add(_elem6);
+              _elem14 = new Location();
+              _elem14.read(iprot);
+              struct.success.add(_elem14);
             }
           }
           struct.setSuccessIsSet(true);
@@ -1720,14 +1852,14 @@ public class Lights {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
-                  struct.success = new ArrayList<TaggedLocation>(_list8.size);
-                  TaggedLocation _elem9;
-                  for (int _i10 = 0; _i10 < _list8.size; ++_i10)
+                  org.apache.thrift.protocol.TList _list16 = iprot.readListBegin();
+                  struct.success = new ArrayList<TaggedLocation>(_list16.size);
+                  TaggedLocation _elem17;
+                  for (int _i18 = 0; _i18 < _list16.size; ++_i18)
                   {
-                    _elem9 = new TaggedLocation();
-                    _elem9.read(iprot);
-                    struct.success.add(_elem9);
+                    _elem17 = new TaggedLocation();
+                    _elem17.read(iprot);
+                    struct.success.add(_elem17);
                   }
                   iprot.readListEnd();
                 }
@@ -1755,9 +1887,9 @@ public class Lights {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (TaggedLocation _iter11 : struct.success)
+            for (TaggedLocation _iter19 : struct.success)
             {
-              _iter11.write(oprot);
+              _iter19.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -1788,9 +1920,9 @@ public class Lights {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (TaggedLocation _iter12 : struct.success)
+            for (TaggedLocation _iter20 : struct.success)
             {
-              _iter12.write(oprot);
+              _iter20.write(oprot);
             }
           }
         }
@@ -1802,14 +1934,795 @@ public class Lights {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<TaggedLocation>(_list13.size);
-            TaggedLocation _elem14;
-            for (int _i15 = 0; _i15 < _list13.size; ++_i15)
+            org.apache.thrift.protocol.TList _list21 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TaggedLocation>(_list21.size);
+            TaggedLocation _elem22;
+            for (int _i23 = 0; _i23 < _list21.size; ++_i23)
             {
-              _elem14 = new TaggedLocation();
-              _elem14.read(iprot);
-              struct.success.add(_elem14);
+              _elem22 = new TaggedLocation();
+              _elem22.read(iprot);
+              struct.success.add(_elem22);
+            }
+          }
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class getLocationsWithMetaNear_args implements org.apache.thrift.TBase<getLocationsWithMetaNear_args, getLocationsWithMetaNear_args._Fields>, java.io.Serializable, Cloneable, Comparable<getLocationsWithMetaNear_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getLocationsWithMetaNear_args");
+
+    private static final org.apache.thrift.protocol.TField CENTER_FIELD_DESC = new org.apache.thrift.protocol.TField("center", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new getLocationsWithMetaNear_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new getLocationsWithMetaNear_argsTupleSchemeFactory());
+    }
+
+    public Center center; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      CENTER((short)1, "center");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // CENTER
+            return CENTER;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.CENTER, new org.apache.thrift.meta_data.FieldMetaData("center", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Center.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getLocationsWithMetaNear_args.class, metaDataMap);
+    }
+
+    public getLocationsWithMetaNear_args() {
+    }
+
+    public getLocationsWithMetaNear_args(
+      Center center)
+    {
+      this();
+      this.center = center;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getLocationsWithMetaNear_args(getLocationsWithMetaNear_args other) {
+      if (other.isSetCenter()) {
+        this.center = new Center(other.center);
+      }
+    }
+
+    public getLocationsWithMetaNear_args deepCopy() {
+      return new getLocationsWithMetaNear_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.center = null;
+    }
+
+    public Center getCenter() {
+      return this.center;
+    }
+
+    public getLocationsWithMetaNear_args setCenter(Center center) {
+      this.center = center;
+      return this;
+    }
+
+    public void unsetCenter() {
+      this.center = null;
+    }
+
+    /** Returns true if field center is set (has been assigned a value) and false otherwise */
+    public boolean isSetCenter() {
+      return this.center != null;
+    }
+
+    public void setCenterIsSet(boolean value) {
+      if (!value) {
+        this.center = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case CENTER:
+        if (value == null) {
+          unsetCenter();
+        } else {
+          setCenter((Center)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case CENTER:
+        return getCenter();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case CENTER:
+        return isSetCenter();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof getLocationsWithMetaNear_args)
+        return this.equals((getLocationsWithMetaNear_args)that);
+      return false;
+    }
+
+    public boolean equals(getLocationsWithMetaNear_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_center = true && this.isSetCenter();
+      boolean that_present_center = true && that.isSetCenter();
+      if (this_present_center || that_present_center) {
+        if (!(this_present_center && that_present_center))
+          return false;
+        if (!this.center.equals(that.center))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      List<Object> list = new ArrayList<Object>();
+
+      boolean present_center = true && (isSetCenter());
+      list.add(present_center);
+      if (present_center)
+        list.add(center);
+
+      return list.hashCode();
+    }
+
+    @Override
+    public int compareTo(getLocationsWithMetaNear_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetCenter()).compareTo(other.isSetCenter());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetCenter()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.center, other.center);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("getLocationsWithMetaNear_args(");
+      boolean first = true;
+
+      sb.append("center:");
+      if (this.center == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.center);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (center != null) {
+        center.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class getLocationsWithMetaNear_argsStandardSchemeFactory implements SchemeFactory {
+      public getLocationsWithMetaNear_argsStandardScheme getScheme() {
+        return new getLocationsWithMetaNear_argsStandardScheme();
+      }
+    }
+
+    private static class getLocationsWithMetaNear_argsStandardScheme extends StandardScheme<getLocationsWithMetaNear_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, getLocationsWithMetaNear_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // CENTER
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.center = new Center();
+                struct.center.read(iprot);
+                struct.setCenterIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, getLocationsWithMetaNear_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.center != null) {
+          oprot.writeFieldBegin(CENTER_FIELD_DESC);
+          struct.center.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class getLocationsWithMetaNear_argsTupleSchemeFactory implements SchemeFactory {
+      public getLocationsWithMetaNear_argsTupleScheme getScheme() {
+        return new getLocationsWithMetaNear_argsTupleScheme();
+      }
+    }
+
+    private static class getLocationsWithMetaNear_argsTupleScheme extends TupleScheme<getLocationsWithMetaNear_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, getLocationsWithMetaNear_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetCenter()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetCenter()) {
+          struct.center.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, getLocationsWithMetaNear_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.center = new Center();
+          struct.center.read(iprot);
+          struct.setCenterIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class getLocationsWithMetaNear_result implements org.apache.thrift.TBase<getLocationsWithMetaNear_result, getLocationsWithMetaNear_result._Fields>, java.io.Serializable, Cloneable, Comparable<getLocationsWithMetaNear_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getLocationsWithMetaNear_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new getLocationsWithMetaNear_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new getLocationsWithMetaNear_resultTupleSchemeFactory());
+    }
+
+    public List<TaggedLocationWithMeta> success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TaggedLocationWithMeta.class))));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getLocationsWithMetaNear_result.class, metaDataMap);
+    }
+
+    public getLocationsWithMetaNear_result() {
+    }
+
+    public getLocationsWithMetaNear_result(
+      List<TaggedLocationWithMeta> success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getLocationsWithMetaNear_result(getLocationsWithMetaNear_result other) {
+      if (other.isSetSuccess()) {
+        List<TaggedLocationWithMeta> __this__success = new ArrayList<TaggedLocationWithMeta>(other.success.size());
+        for (TaggedLocationWithMeta other_element : other.success) {
+          __this__success.add(new TaggedLocationWithMeta(other_element));
+        }
+        this.success = __this__success;
+      }
+    }
+
+    public getLocationsWithMetaNear_result deepCopy() {
+      return new getLocationsWithMetaNear_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.success = null;
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<TaggedLocationWithMeta> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(TaggedLocationWithMeta elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<TaggedLocationWithMeta>();
+      }
+      this.success.add(elem);
+    }
+
+    public List<TaggedLocationWithMeta> getSuccess() {
+      return this.success;
+    }
+
+    public getLocationsWithMetaNear_result setSuccess(List<TaggedLocationWithMeta> success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((List<TaggedLocationWithMeta>)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof getLocationsWithMetaNear_result)
+        return this.equals((getLocationsWithMetaNear_result)that);
+      return false;
+    }
+
+    public boolean equals(getLocationsWithMetaNear_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true && (isSetSuccess());
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
+
+      return list.hashCode();
+    }
+
+    @Override
+    public int compareTo(getLocationsWithMetaNear_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("getLocationsWithMetaNear_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class getLocationsWithMetaNear_resultStandardSchemeFactory implements SchemeFactory {
+      public getLocationsWithMetaNear_resultStandardScheme getScheme() {
+        return new getLocationsWithMetaNear_resultStandardScheme();
+      }
+    }
+
+    private static class getLocationsWithMetaNear_resultStandardScheme extends StandardScheme<getLocationsWithMetaNear_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, getLocationsWithMetaNear_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list24 = iprot.readListBegin();
+                  struct.success = new ArrayList<TaggedLocationWithMeta>(_list24.size);
+                  TaggedLocationWithMeta _elem25;
+                  for (int _i26 = 0; _i26 < _list24.size; ++_i26)
+                  {
+                    _elem25 = new TaggedLocationWithMeta();
+                    _elem25.read(iprot);
+                    struct.success.add(_elem25);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, getLocationsWithMetaNear_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
+            for (TaggedLocationWithMeta _iter27 : struct.success)
+            {
+              _iter27.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class getLocationsWithMetaNear_resultTupleSchemeFactory implements SchemeFactory {
+      public getLocationsWithMetaNear_resultTupleScheme getScheme() {
+        return new getLocationsWithMetaNear_resultTupleScheme();
+      }
+    }
+
+    private static class getLocationsWithMetaNear_resultTupleScheme extends TupleScheme<getLocationsWithMetaNear_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, getLocationsWithMetaNear_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          {
+            oprot.writeI32(struct.success.size());
+            for (TaggedLocationWithMeta _iter28 : struct.success)
+            {
+              _iter28.write(oprot);
+            }
+          }
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, getLocationsWithMetaNear_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          {
+            org.apache.thrift.protocol.TList _list29 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TaggedLocationWithMeta>(_list29.size);
+            TaggedLocationWithMeta _elem30;
+            for (int _i31 = 0; _i31 < _list29.size; ++_i31)
+            {
+              _elem30 = new TaggedLocationWithMeta();
+              _elem30.read(iprot);
+              struct.success.add(_elem30);
             }
           }
           struct.setSuccessIsSet(true);

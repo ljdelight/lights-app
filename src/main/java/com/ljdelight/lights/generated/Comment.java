@@ -33,28 +33,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"cast", "rawtypes", "serial", "unchecked"})
-public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, TaggedLocation._Fields>, java.io.Serializable, Cloneable, Comparable<TaggedLocation> {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TaggedLocation");
+public class Comment implements org.apache.thrift.TBase<Comment, Comment._Fields>, java.io.Serializable, Cloneable, Comparable<Comment> {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("Comment");
 
-  private static final org.apache.thrift.protocol.TField UID_FIELD_DESC = new org.apache.thrift.protocol.TField("uid", org.apache.thrift.protocol.TType.I64, (short)1);
-  private static final org.apache.thrift.protocol.TField LOCATION_FIELD_DESC = new org.apache.thrift.protocol.TField("location", org.apache.thrift.protocol.TType.STRUCT, (short)2);
-  private static final org.apache.thrift.protocol.TField VOTES_FIELD_DESC = new org.apache.thrift.protocol.TField("votes", org.apache.thrift.protocol.TType.I32, (short)3);
+  private static final org.apache.thrift.protocol.TField VOTES_FIELD_DESC = new org.apache.thrift.protocol.TField("votes", org.apache.thrift.protocol.TType.I32, (short)1);
+  private static final org.apache.thrift.protocol.TField COMMENT_FIELD_DESC = new org.apache.thrift.protocol.TField("comment", org.apache.thrift.protocol.TType.STRING, (short)2);
+  private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)3);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new TaggedLocationStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TaggedLocationTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new CommentStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new CommentTupleSchemeFactory());
   }
 
-  public long uid; // required
-  public Location location; // required
   public int votes; // required
+  public String comment; // required
+  public long id; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    UID((short)1, "uid"),
-    LOCATION((short)2, "location"),
-    VOTES((short)3, "votes");
+    VOTES((short)1, "votes"),
+    COMMENT((short)2, "comment"),
+    ID((short)3, "id");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -69,12 +69,12 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // UID
-          return UID;
-        case 2: // LOCATION
-          return LOCATION;
-        case 3: // VOTES
+        case 1: // VOTES
           return VOTES;
+        case 2: // COMMENT
+          return COMMENT;
+        case 3: // ID
+          return ID;
         default:
           return null;
       }
@@ -115,115 +115,68 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
   }
 
   // isset id assignments
-  private static final int __UID_ISSET_ID = 0;
-  private static final int __VOTES_ISSET_ID = 1;
+  private static final int __VOTES_ISSET_ID = 0;
+  private static final int __ID_ISSET_ID = 1;
   private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.UID, new org.apache.thrift.meta_data.FieldMetaData("uid", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-    tmpMap.put(_Fields.LOCATION, new org.apache.thrift.meta_data.FieldMetaData("location", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Location.class)));
     tmpMap.put(_Fields.VOTES, new org.apache.thrift.meta_data.FieldMetaData("votes", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.COMMENT, new org.apache.thrift.meta_data.FieldMetaData("comment", org.apache.thrift.TFieldRequirementType.REQUIRED, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.REQUIRED, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TaggedLocation.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(Comment.class, metaDataMap);
   }
 
-  public TaggedLocation() {
+  public Comment() {
   }
 
-  public TaggedLocation(
-    long uid,
-    Location location,
-    int votes)
+  public Comment(
+    int votes,
+    String comment,
+    long id)
   {
     this();
-    this.uid = uid;
-    setUidIsSet(true);
-    this.location = location;
     this.votes = votes;
     setVotesIsSet(true);
+    this.comment = comment;
+    this.id = id;
+    setIdIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public TaggedLocation(TaggedLocation other) {
+  public Comment(Comment other) {
     __isset_bitfield = other.__isset_bitfield;
-    this.uid = other.uid;
-    if (other.isSetLocation()) {
-      this.location = new Location(other.location);
-    }
     this.votes = other.votes;
+    if (other.isSetComment()) {
+      this.comment = other.comment;
+    }
+    this.id = other.id;
   }
 
-  public TaggedLocation deepCopy() {
-    return new TaggedLocation(this);
+  public Comment deepCopy() {
+    return new Comment(this);
   }
 
   @Override
   public void clear() {
-    setUidIsSet(false);
-    this.uid = 0;
-    this.location = null;
     setVotesIsSet(false);
     this.votes = 0;
-  }
-
-  public long getUid() {
-    return this.uid;
-  }
-
-  public TaggedLocation setUid(long uid) {
-    this.uid = uid;
-    setUidIsSet(true);
-    return this;
-  }
-
-  public void unsetUid() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __UID_ISSET_ID);
-  }
-
-  /** Returns true if field uid is set (has been assigned a value) and false otherwise */
-  public boolean isSetUid() {
-    return EncodingUtils.testBit(__isset_bitfield, __UID_ISSET_ID);
-  }
-
-  public void setUidIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __UID_ISSET_ID, value);
-  }
-
-  public Location getLocation() {
-    return this.location;
-  }
-
-  public TaggedLocation setLocation(Location location) {
-    this.location = location;
-    return this;
-  }
-
-  public void unsetLocation() {
-    this.location = null;
-  }
-
-  /** Returns true if field location is set (has been assigned a value) and false otherwise */
-  public boolean isSetLocation() {
-    return this.location != null;
-  }
-
-  public void setLocationIsSet(boolean value) {
-    if (!value) {
-      this.location = null;
-    }
+    this.comment = null;
+    setIdIsSet(false);
+    this.id = 0;
   }
 
   public int getVotes() {
     return this.votes;
   }
 
-  public TaggedLocation setVotes(int votes) {
+  public Comment setVotes(int votes) {
     this.votes = votes;
     setVotesIsSet(true);
     return this;
@@ -242,24 +195,55 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
     __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __VOTES_ISSET_ID, value);
   }
 
+  public String getComment() {
+    return this.comment;
+  }
+
+  public Comment setComment(String comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  /** Returns true if field comment is set (has been assigned a value) and false otherwise */
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean value) {
+    if (!value) {
+      this.comment = null;
+    }
+  }
+
+  public long getId() {
+    return this.id;
+  }
+
+  public Comment setId(long id) {
+    this.id = id;
+    setIdIsSet(true);
+    return this;
+  }
+
+  public void unsetId() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
+  }
+
+  /** Returns true if field id is set (has been assigned a value) and false otherwise */
+  public boolean isSetId() {
+    return EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
+  }
+
+  public void setIdIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
+  }
+
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
-    case UID:
-      if (value == null) {
-        unsetUid();
-      } else {
-        setUid((Long)value);
-      }
-      break;
-
-    case LOCATION:
-      if (value == null) {
-        unsetLocation();
-      } else {
-        setLocation((Location)value);
-      }
-      break;
-
     case VOTES:
       if (value == null) {
         unsetVotes();
@@ -268,19 +252,35 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
       }
       break;
 
+    case COMMENT:
+      if (value == null) {
+        unsetComment();
+      } else {
+        setComment((String)value);
+      }
+      break;
+
+    case ID:
+      if (value == null) {
+        unsetId();
+      } else {
+        setId((Long)value);
+      }
+      break;
+
     }
   }
 
   public Object getFieldValue(_Fields field) {
     switch (field) {
-    case UID:
-      return getUid();
-
-    case LOCATION:
-      return getLocation();
-
     case VOTES:
       return getVotes();
+
+    case COMMENT:
+      return getComment();
+
+    case ID:
+      return getId();
 
     }
     throw new IllegalStateException();
@@ -293,12 +293,12 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
     }
 
     switch (field) {
-    case UID:
-      return isSetUid();
-    case LOCATION:
-      return isSetLocation();
     case VOTES:
       return isSetVotes();
+    case COMMENT:
+      return isSetComment();
+    case ID:
+      return isSetId();
     }
     throw new IllegalStateException();
   }
@@ -307,32 +307,14 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TaggedLocation)
-      return this.equals((TaggedLocation)that);
+    if (that instanceof Comment)
+      return this.equals((Comment)that);
     return false;
   }
 
-  public boolean equals(TaggedLocation that) {
+  public boolean equals(Comment that) {
     if (that == null)
       return false;
-
-    boolean this_present_uid = true;
-    boolean that_present_uid = true;
-    if (this_present_uid || that_present_uid) {
-      if (!(this_present_uid && that_present_uid))
-        return false;
-      if (this.uid != that.uid)
-        return false;
-    }
-
-    boolean this_present_location = true && this.isSetLocation();
-    boolean that_present_location = true && that.isSetLocation();
-    if (this_present_location || that_present_location) {
-      if (!(this_present_location && that_present_location))
-        return false;
-      if (!this.location.equals(that.location))
-        return false;
-    }
 
     boolean this_present_votes = true;
     boolean that_present_votes = true;
@@ -343,6 +325,24 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
         return false;
     }
 
+    boolean this_present_comment = true && this.isSetComment();
+    boolean that_present_comment = true && that.isSetComment();
+    if (this_present_comment || that_present_comment) {
+      if (!(this_present_comment && that_present_comment))
+        return false;
+      if (!this.comment.equals(that.comment))
+        return false;
+    }
+
+    boolean this_present_id = true;
+    boolean that_present_id = true;
+    if (this_present_id || that_present_id) {
+      if (!(this_present_id && that_present_id))
+        return false;
+      if (this.id != that.id)
+        return false;
+    }
+
     return true;
   }
 
@@ -350,58 +350,58 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
   public int hashCode() {
     List<Object> list = new ArrayList<Object>();
 
-    boolean present_uid = true;
-    list.add(present_uid);
-    if (present_uid)
-      list.add(uid);
-
-    boolean present_location = true && (isSetLocation());
-    list.add(present_location);
-    if (present_location)
-      list.add(location);
-
     boolean present_votes = true;
     list.add(present_votes);
     if (present_votes)
       list.add(votes);
 
+    boolean present_comment = true && (isSetComment());
+    list.add(present_comment);
+    if (present_comment)
+      list.add(comment);
+
+    boolean present_id = true;
+    list.add(present_id);
+    if (present_id)
+      list.add(id);
+
     return list.hashCode();
   }
 
   @Override
-  public int compareTo(TaggedLocation other) {
+  public int compareTo(Comment other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetUid()).compareTo(other.isSetUid());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetUid()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.uid, other.uid);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetLocation()).compareTo(other.isSetLocation());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetLocation()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.location, other.location);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
     lastComparison = Boolean.valueOf(isSetVotes()).compareTo(other.isSetVotes());
     if (lastComparison != 0) {
       return lastComparison;
     }
     if (isSetVotes()) {
       lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.votes, other.votes);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetComment()).compareTo(other.isSetComment());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetComment()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.comment, other.comment);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetId()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -423,23 +423,23 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TaggedLocation(");
+    StringBuilder sb = new StringBuilder("Comment(");
     boolean first = true;
 
-    sb.append("uid:");
-    sb.append(this.uid);
+    sb.append("votes:");
+    sb.append(this.votes);
     first = false;
     if (!first) sb.append(", ");
-    sb.append("location:");
-    if (this.location == null) {
+    sb.append("comment:");
+    if (this.comment == null) {
       sb.append("null");
     } else {
-      sb.append(this.location);
+      sb.append(this.comment);
     }
     first = false;
     if (!first) sb.append(", ");
-    sb.append("votes:");
-    sb.append(this.votes);
+    sb.append("id:");
+    sb.append(this.id);
     first = false;
     sb.append(")");
     return sb.toString();
@@ -447,15 +447,12 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
 
   public void validate() throws org.apache.thrift.TException {
     // check for required fields
-    // alas, we cannot check 'uid' because it's a primitive and you chose the non-beans generator.
-    if (location == null) {
-      throw new org.apache.thrift.protocol.TProtocolException("Required field 'location' was not present! Struct: " + toString());
-    }
     // alas, we cannot check 'votes' because it's a primitive and you chose the non-beans generator.
-    // check for sub-struct validity
-    if (location != null) {
-      location.validate();
+    if (comment == null) {
+      throw new org.apache.thrift.protocol.TProtocolException("Required field 'comment' was not present! Struct: " + toString());
     }
+    // alas, we cannot check 'id' because it's a primitive and you chose the non-beans generator.
+    // check for sub-struct validity
   }
 
   private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -476,15 +473,15 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
     }
   }
 
-  private static class TaggedLocationStandardSchemeFactory implements SchemeFactory {
-    public TaggedLocationStandardScheme getScheme() {
-      return new TaggedLocationStandardScheme();
+  private static class CommentStandardSchemeFactory implements SchemeFactory {
+    public CommentStandardScheme getScheme() {
+      return new CommentStandardScheme();
     }
   }
 
-  private static class TaggedLocationStandardScheme extends StandardScheme<TaggedLocation> {
+  private static class CommentStandardScheme extends StandardScheme<Comment> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TaggedLocation struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, Comment struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -494,27 +491,26 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
           break;
         }
         switch (schemeField.id) {
-          case 1: // UID
-            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.uid = iprot.readI64();
-              struct.setUidIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 2: // LOCATION
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.location = new Location();
-              struct.location.read(iprot);
-              struct.setLocationIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 3: // VOTES
+          case 1: // VOTES
             if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
               struct.votes = iprot.readI32();
               struct.setVotesIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 2: // COMMENT
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+              struct.comment = iprot.readString();
+              struct.setCommentIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 3: // ID
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.id = iprot.readI64();
+              struct.setIdIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -527,29 +523,29 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
       iprot.readStructEnd();
 
       // check for required fields of primitive type, which can't be checked in the validate method
-      if (!struct.isSetUid()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'uid' was not found in serialized data! Struct: " + toString());
-      }
       if (!struct.isSetVotes()) {
         throw new org.apache.thrift.protocol.TProtocolException("Required field 'votes' was not found in serialized data! Struct: " + toString());
+      }
+      if (!struct.isSetId()) {
+        throw new org.apache.thrift.protocol.TProtocolException("Required field 'id' was not found in serialized data! Struct: " + toString());
       }
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TaggedLocation struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, Comment struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
-      oprot.writeFieldBegin(UID_FIELD_DESC);
-      oprot.writeI64(struct.uid);
-      oprot.writeFieldEnd();
-      if (struct.location != null) {
-        oprot.writeFieldBegin(LOCATION_FIELD_DESC);
-        struct.location.write(oprot);
-        oprot.writeFieldEnd();
-      }
       oprot.writeFieldBegin(VOTES_FIELD_DESC);
       oprot.writeI32(struct.votes);
+      oprot.writeFieldEnd();
+      if (struct.comment != null) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeString(struct.comment);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldBegin(ID_FIELD_DESC);
+      oprot.writeI64(struct.id);
       oprot.writeFieldEnd();
       oprot.writeFieldStop();
       oprot.writeStructEnd();
@@ -557,32 +553,31 @@ public class TaggedLocation implements org.apache.thrift.TBase<TaggedLocation, T
 
   }
 
-  private static class TaggedLocationTupleSchemeFactory implements SchemeFactory {
-    public TaggedLocationTupleScheme getScheme() {
-      return new TaggedLocationTupleScheme();
+  private static class CommentTupleSchemeFactory implements SchemeFactory {
+    public CommentTupleScheme getScheme() {
+      return new CommentTupleScheme();
     }
   }
 
-  private static class TaggedLocationTupleScheme extends TupleScheme<TaggedLocation> {
+  private static class CommentTupleScheme extends TupleScheme<Comment> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TaggedLocation struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, Comment struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
-      oprot.writeI64(struct.uid);
-      struct.location.write(oprot);
       oprot.writeI32(struct.votes);
+      oprot.writeString(struct.comment);
+      oprot.writeI64(struct.id);
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TaggedLocation struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, Comment struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      struct.uid = iprot.readI64();
-      struct.setUidIsSet(true);
-      struct.location = new Location();
-      struct.location.read(iprot);
-      struct.setLocationIsSet(true);
       struct.votes = iprot.readI32();
       struct.setVotesIsSet(true);
+      struct.comment = iprot.readString();
+      struct.setCommentIsSet(true);
+      struct.id = iprot.readI64();
+      struct.setIdIsSet(true);
     }
   }
 
