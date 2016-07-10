@@ -1,5 +1,15 @@
-language: java
+language: android
 sudo: true
+
+android:
+  components:
+    - tools
+    - build-tools-23.0.3
+    - android-23
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+
 jdk:
   - oraclejdk8
 
@@ -18,4 +28,8 @@ before_install:
   - gem install fpm
 
 script:
-  - make || exit 1
+  - mkdir -p app/src/debug/res/values app/src/release/res/values
+  - cp app/google_maps_api.xml.template app/src/debug/res/values/google_maps_api.xml
+  - cp app/google_maps_api.xml.template app/src/release/res/values/google_maps_api.xml
+  - ./gradlew assemble :lightsservice:release || exit 1
+  - make -C service || exit 1

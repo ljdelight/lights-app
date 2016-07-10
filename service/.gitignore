@@ -1,0 +1,10 @@
+build/
+.gradle/
+.settings/
+/bin/
+.classpath
+.project
+src/main/resources/database.properties
+buildrpm
+gen-*
+*.rpm

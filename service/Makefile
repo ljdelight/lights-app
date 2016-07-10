@@ -8,17 +8,13 @@ BUILD := build
 .PHONY: final
 final: buildrpm
 
-.PHONY: jar
-jar:
-	./gradlew --info release
-
 .PHONY: buildrpm
-buildrpm: jar
+buildrpm: build/libs/lightsservice.jar
 	mkdir -p build/rpm/opt/ljdelight/lights/jars
 	mkdir -p build/rpm/etc/systemd/system/
-	install --mode=0444 build/libs/LightsService.jar build/rpm/opt/ljdelight/lights/
+	install --mode=0444 build/libs/lightsservice.jar build/rpm/opt/ljdelight/lights/
 	install --mode=0444 build/output/lib/*.jar build/rpm/opt/ljdelight/lights/jars
-	install --mode=0444 LICENSE build/rpm/opt/ljdelight/lights/
+	install --mode=0444 ../LICENSE build/rpm/opt/ljdelight/lights/
 	install --mode=0644 src/main/install/rpm/ljdelight-lights.service build/rpm/etc/systemd/system/
 	fpm -s dir -t rpm -C build/rpm --force \
 		--version 0.1.7 --name ljdelight-lights --architecture noarch \

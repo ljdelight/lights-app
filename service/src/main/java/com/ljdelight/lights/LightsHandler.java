@@ -115,7 +115,8 @@ public class LightsHandler implements Lights.Iface {
 		try {
 		    statement.close();
 		} catch (SQLException e) {
-		    // Do nothing in this case
+                    logger.error("Failed to close the sql statement. Logging the error and continuing.");
+		    // Log and keep going in this case
 		}
 	    }
 	}
@@ -166,7 +167,8 @@ public class LightsHandler implements Lights.Iface {
 		try {
 		    statement.close();
 		} catch (SQLException e) {
-		    // Do nothing in this case
+                    logger.error("Failed to close sql statement. Logging error and continuing.");
+		    // Log the error and keep going in this case
 		}
 	    }
 	}
