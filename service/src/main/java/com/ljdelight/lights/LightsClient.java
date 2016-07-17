@@ -46,14 +46,16 @@ public class LightsClient {
             TProtocol protocol = new TBinaryProtocol(transport);
             Lights.Client client = new Lights.Client(protocol);
 
-            List<TaggedLocationWithMeta> locations = client.getLocationsWithMetaNear(new Center(new Location(37.6889, -97.3361)));
+            List<TaggedLocationWithMeta> locations =
+                    client.getLocationsWithMetaNear(new Center(new Location(37.6889, -97.3361)));
             for (TaggedLocationWithMeta location : locations) {
-        	StringBuilder s = new StringBuilder();
-        	for (Comment c : location.meta.comments) {
-        	    s.append('[').append(c.id).append(":").append(c.comment).append(']');
-        	}
-                System.out.println(String.format("%d,%f,%f,%s", location.tag.uid, location.tag.location.getLat(), location.tag.location.getLng(), 
-                	s.toString()));
+                StringBuilder s = new StringBuilder();
+                for (Comment c : location.meta.comments) {
+                    s.append('[').append(c.id).append(":").append(c.comment).append(']');
+                }
+                System.out.println(String.format("%d,%f,%f,%s", location.tag.uid,
+                        location.tag.location.getLat(), location.tag.location.getLng(),
+                        s.toString()));
             }
             System.out.println("Found " + locations.size());
             transport.close();
