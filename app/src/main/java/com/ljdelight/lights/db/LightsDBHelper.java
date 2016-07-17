@@ -31,7 +31,7 @@ public class LightsDBHelper extends SQLiteOpenHelper {
     public LightsDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mDatabase = this.getWritableDatabase();
-        //onUpgrade(mDatabase, 1, 1);
+        // onUpgrade(mDatabase, 1, 1);
     }
 
     @Override
@@ -72,7 +72,8 @@ public class LightsDBHelper extends SQLiteOpenHelper {
         mDatabase.beginTransaction();
         for (TaggedLocationWithMeta tloc : locations) {
             Log.d(TAG, "Inserting " + tloc.tag.uid);
-            this.insertLocation(tloc.tag.uid, tloc.tag.location.getLat(), tloc.tag.location.getLng(), tloc.tag.votes);
+            this.insertLocation(tloc.tag.uid, tloc.tag.location.getLat(),
+                    tloc.tag.location.getLng(), tloc.tag.votes);
             for (Comment comment : tloc.meta.comments) {
                 this.insertComment(tloc.tag.uid, comment.id, comment.comment, comment.votes);
             }
@@ -91,7 +92,6 @@ public class LightsDBHelper extends SQLiteOpenHelper {
         mDatabase.insert(LightsContract.LocationsEntry.TABLE_NAME, null, values);
     }
 
-
     public void insertComment(long locationId, long commentId, String comment, int commentVotes) {
         ContentValues commentValues = new ContentValues();
         commentValues.put(LightsContract.CommentsEntry.COLUMN_NAME_ID, commentId);
@@ -108,29 +108,28 @@ public class LightsDBHelper extends SQLiteOpenHelper {
     private static final String COMMENTS_JOIN_LOCCOM =
             " INNER JOIN locations_comments ON comments.id=locations_comments.comment_id ";
 
-    public List<Comment> getComments(long locationId)
-    {
+    public List<Comment> getComments(long locationId) {
         List<Comment> comments = new LinkedList<>();
         String[] allCommentsColumns = {
                 LightsContract.CommentsEntry.COLUMN_NAME_ID,
                 LightsContract.CommentsEntry.COLUMN_NAME_COMMENT,
                 LightsContract.CommentsEntry.COLUMN_NAME_VOTES,
         };
-        Cursor commentsJoinLocations = mDatabase.query(
-                LightsContract.CommentsEntry.TABLE_NAME + COMMENTS_JOIN_LOCCOM,
-                allCommentsColumns,
-                "locations_comments.location_id=?",
-                new String[]{Long.toString(locationId)},
-                null,
-                null,
-                null,
-                null);
+        Cursor commentsJoinLocations =
+                mDatabase.query(LightsContract.CommentsEntry.TABLE_NAME + COMMENTS_JOIN_LOCCOM,
+                        allCommentsColumns, "locations_comments.location_id=?",
+                        new String[] {Long.toString(locationId)}, null, null, null, null);
 
         try {
             while (commentsJoinLocations.moveToNext()) {
-                long id = commentsJoinLocations.getLong(commentsJoinLocations.getColumnIndexOrThrow(LightsContract.CommentsEntry.COLUMN_NAME_ID));
-                int votes = commentsJoinLocations.getInt(commentsJoinLocations.getColumnIndexOrThrow(LightsContract.CommentsEntry.COLUMN_NAME_VOTES));
-                String comment = commentsJoinLocations.getString(commentsJoinLocations.getColumnIndexOrThrow(LightsContract.CommentsEntry.COLUMN_NAME_COMMENT));
+                long id = commentsJoinLocations.getLong(commentsJoinLocations.getColumnIndexOrThrow(
+                        LightsContract.CommentsEntry.COLUMN_NAME_ID));
+                int votes =
+                        commentsJoinLocations.getInt(commentsJoinLocations.getColumnIndexOrThrow(
+                                LightsContract.CommentsEntry.COLUMN_NAME_VOTES));
+                String comment =
+                        commentsJoinLocations.getString(commentsJoinLocations.getColumnIndexOrThrow(
+                                LightsContract.CommentsEntry.COLUMN_NAME_COMMENT));
 
                 comments.add(new Comment(votes, comment, id));
             }
@@ -143,26 +142,26 @@ public class LightsDBHelper extends SQLiteOpenHelper {
     public List<TaggedLocation> getLocations() {
         List<TaggedLocation> result = new LinkedList<>();
 
-        String[] allLocationColumns = {
-                LightsContract.LocationsEntry.COLUMN_NAME_ID,
+        String[] allLocationColumns = {LightsContract.LocationsEntry.COLUMN_NAME_ID,
                 LightsContract.LocationsEntry.COLUMN_NAME_LAT,
                 LightsContract.LocationsEntry.COLUMN_NAME_LNG,
-                LightsContract.LocationsEntry.COLUMN_NAME_VOTES
-        };
-        Cursor locations = mDatabase.query(
-                LightsContract.LocationsEntry.TABLE_NAME,
-                allLocationColumns,
-                null, null, null, null, null, null);
+                LightsContract.LocationsEntry.COLUMN_NAME_VOTES};
+        Cursor locations = mDatabase.query(LightsContract.LocationsEntry.TABLE_NAME,
+                allLocationColumns, null, null, null, null, null, null);
         try {
             Log.d(TAG, "Local sqlite table has " + locations.getCount() + " locations");
             while (locations.moveToNext()) {
-                long id = locations.getLong(locations.getColumnIndexOrThrow(LightsContract.LocationsEntry.COLUMN_NAME_ID));
-                double lat = locations.getDouble(locations.getColumnIndexOrThrow(LightsContract.LocationsEntry.COLUMN_NAME_LAT));
-                double lng = locations.getDouble(locations.getColumnIndexOrThrow(LightsContract.LocationsEntry.COLUMN_NAME_LNG));
-                int votes = locations.getInt(locations.getColumnIndexOrThrow(LightsContract.LocationsEntry.COLUMN_NAME_VOTES));
+                long id = locations.getLong(locations.getColumnIndexOrThrow(
+                        LightsContract.LocationsEntry.COLUMN_NAME_ID));
+                double lat = locations.getDouble(locations.getColumnIndexOrThrow(
+                        LightsContract.LocationsEntry.COLUMN_NAME_LAT));
+                double lng = locations.getDouble(locations.getColumnIndexOrThrow(
+                        LightsContract.LocationsEntry.COLUMN_NAME_LNG));
+                int votes = locations.getInt(locations.getColumnIndexOrThrow(
+                        LightsContract.LocationsEntry.COLUMN_NAME_VOTES));
 
                 TaggedLocation tag = new TaggedLocation(id, new Location(lat, lng), votes);
-                //Log.d(TAG, "Location: " + tag.toString());
+                // Log.d(TAG, "Location: " + tag.toString());
                 result.add(tag);
             }
         } finally {
@@ -171,7 +170,6 @@ public class LightsDBHelper extends SQLiteOpenHelper {
 
         return result;
     }
-
 
     public List<TaggedLocationWithMeta> getLocationsWithMeta() {
         Log.d(TAG, "In method getLocationsWithMeta()");
@@ -187,28 +185,30 @@ public class LightsDBHelper extends SQLiteOpenHelper {
 
         for (TaggedLocation tag : tags) {
             // Get the comments from the current tagged location
-            Cursor commentsJoinLocations = mDatabase.query(
-                    LightsContract.CommentsEntry.TABLE_NAME + COMMENTS_JOIN_LOCCOM,
-                    allCommentsColumns,
-                    "locations_comments.location_id=?",
-                    new String[]{Long.toString(tag.getUid())},
-                    null,
-                    null,
-                    null,
-                    null);
+            Cursor commentsJoinLocations =
+                    mDatabase.query(LightsContract.CommentsEntry.TABLE_NAME + COMMENTS_JOIN_LOCCOM,
+                            allCommentsColumns, "locations_comments.location_id=?",
+                            new String[] {Long.toString(tag.getUid())}, null, null, null, null);
 
             try {
                 List<Comment> commentList = new LinkedList<>();
                 while (commentsJoinLocations.moveToNext()) {
-                    long id = commentsJoinLocations.getLong(commentsJoinLocations.getColumnIndexOrThrow(LightsContract.CommentsEntry.COLUMN_NAME_ID));
-                    int votes = commentsJoinLocations.getInt(commentsJoinLocations.getColumnIndexOrThrow(LightsContract.CommentsEntry.COLUMN_NAME_VOTES));
-                    String comment = commentsJoinLocations.getString(commentsJoinLocations.getColumnIndexOrThrow(LightsContract.CommentsEntry.COLUMN_NAME_COMMENT));
+                    long id = commentsJoinLocations.getLong(
+                            commentsJoinLocations.getColumnIndexOrThrow(
+                                    LightsContract.CommentsEntry.COLUMN_NAME_ID));
+                    int votes = commentsJoinLocations.getInt(
+                            commentsJoinLocations.getColumnIndexOrThrow(
+                                    LightsContract.CommentsEntry.COLUMN_NAME_VOTES));
+                    String comment = commentsJoinLocations.getString(
+                            commentsJoinLocations.getColumnIndexOrThrow(
+                                    LightsContract.CommentsEntry.COLUMN_NAME_COMMENT));
 
                     commentList.add(new Comment(votes, comment, id));
                 }
 
-                TaggedLocationWithMeta tlwm = new TaggedLocationWithMeta(tag, new Meta(commentList));
-                //Log.d(TAG, "Tagged location: " + tlwm.toString());
+                TaggedLocationWithMeta tlwm =
+                        new TaggedLocationWithMeta(tag, new Meta(commentList));
+                // Log.d(TAG, "Tagged location: " + tlwm.toString());
                 tagsMeta.add(tlwm);
             } finally {
                 commentsJoinLocations.close();

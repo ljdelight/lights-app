@@ -42,7 +42,6 @@ public class LocationFetchTask extends AsyncTask<Center, Void, List<TaggedLocati
         mCommand.postExec();
     }
 
-
     public static class NotifyOnTaskCompleteCommand implements Command {
         LocationFetchTask.Listener mListener;
         List<TaggedLocationWithMeta> mLocations;
@@ -79,7 +78,7 @@ public class LocationFetchTask extends AsyncTask<Center, Void, List<TaggedLocati
                 transport.close();
                 Log.d(TAG, "Finished and closed getLocationsWithMetaNear");
 
-                //helper.insertAll(locations);
+                // helper.insertAll(locations);
             } else {
                 Log.d(TAG, "The cache is valid and loading those locations");
                 locations = helper.getLocationsWithMeta();
@@ -99,4 +98,3 @@ public class LocationFetchTask extends AsyncTask<Center, Void, List<TaggedLocati
         return locations;
     }
 }
-

@@ -49,7 +49,8 @@ public class LightsServer {
     public static void simple(Lights.Processor<LightsHandler> processor, int port) {
         try {
             TNonblockingServerTransport serverTransport = new TNonblockingServerSocket(port);
-            TServer server = new TNonblockingServer(new TNonblockingServer.Args(serverTransport).processor(processor));
+            TServer server = new TNonblockingServer(
+                    new TNonblockingServer.Args(serverTransport).processor(processor));
             logger.info("Starting server on port {}", port);
 
             server.serve();

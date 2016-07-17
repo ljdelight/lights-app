@@ -22,11 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-
-public class MapsActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class MapsActivity
+        extends Activity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private final String TAG = getClass().getSimpleName();
     public final static String LOCATION_ID = "com.ljdelight.lights.LOCATION_ID";
-
 
     private GoogleMap mMap;
     private HashMap<String, String> mMarkerToLocation = new HashMap<>();
@@ -37,11 +36,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback, Google
 
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
 
     /**
      * Manipulates the map once available.
@@ -63,36 +60,31 @@ public class MapsActivity extends Activity implements OnMapReadyCallback, Google
         mMap.setOnInfoWindowClickListener(this);
         Center center = new Center(new Location(lat, lng)).setRadiusInMeters(radius);
 
-        LocationFetchTask task = new LocationFetchTask(
-                this,
-                new LocationFetchTask.Listener() {
-                    @Override
-                    public void onFetchFinished(List<TaggedLocationWithMeta> locations) {
-                        LatLngBounds.Builder boundBuilder = new LatLngBounds.Builder();
+        LocationFetchTask task = new LocationFetchTask(this, new LocationFetchTask.Listener() {
+            @Override
+            public void onFetchFinished(List<TaggedLocationWithMeta> locations) {
+                LatLngBounds.Builder boundBuilder = new LatLngBounds.Builder();
 
-                        for (TaggedLocationWithMeta tag : locations) {
-                            //Log.d(TAG, "Found " + tloc.meta.comments.size() + " comments");
+                for (TaggedLocationWithMeta tag : locations) {
+                    // Log.d(TAG, "Found " + tloc.meta.comments.size() + " comments");
 
-                            double lat = tag.tag.location.getLat();
-                            double lng = tag.tag.location.getLng();
-                            int numComments = tag.meta.comments.size();
-                            int numVotes = tag.tag.votes;
+                    double lat = tag.tag.location.getLat();
+                    double lng = tag.tag.location.getLng();
+                    int numComments = tag.meta.comments.size();
+                    int numVotes = tag.tag.votes;
 
-                            LatLng loc = new LatLng(lat, lng);
-                            MarkerOptions options = new MarkerOptions()
-                                    .position(loc)
-                                    .title(String.format(Locale.US, "%d votes %d comments", numVotes, numComments));
-                            Marker marker = mMap.addMarker(options);
-                            mMarkerToLocation.put(marker.getId(), Long.toString(tag.tag.uid));
-                            boundBuilder.include(loc);
-                        }
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), 50));
-                    }
+                    LatLng loc = new LatLng(lat, lng);
+                    MarkerOptions options = new MarkerOptions().position(loc).title(String.format(
+                            Locale.US, "%d votes %d comments", numVotes, numComments));
+                    Marker marker = mMap.addMarker(options);
+                    mMarkerToLocation.put(marker.getId(), Long.toString(tag.tag.uid));
+                    boundBuilder.include(loc);
                 }
-        );
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), 50));
+            }
+        });
         task.execute(center);
     }
-
 
     @Override
     public void onInfoWindowClick(Marker marker) {
