@@ -36,11 +36,19 @@ struct Center {
     16: optional i32 radiusInMeters = 65000;
 }
 
+enum ThingType {
+    LOCATION = 1,
+    COMMENT = 2
+}
+
+struct Thing {
+    1: required i64 id;
+    2: required ThingType type;
+}
+
 service Lights {
     list<Location> getAllLocations(),
     list<TaggedLocation> getLocationsNear(1:Center center),
-    list<TaggedLocationWithMeta> getLocationsWithMetaNear(1:Center center)
+    list<TaggedLocationWithMeta> getLocationsWithMetaNear(1:Center center),
+    i64 upvoteThing(1:i64 token, 2:Thing thing) // upvote a location, comment, picture
 }
-
-
-

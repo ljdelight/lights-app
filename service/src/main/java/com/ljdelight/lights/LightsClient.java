@@ -5,8 +5,11 @@
 
 package com.ljdelight.lights;
 
-import java.util.Arrays;
-import java.util.List;
+import com.ljdelight.lights.generated.Center;
+import com.ljdelight.lights.generated.Comment;
+import com.ljdelight.lights.generated.Lights;
+import com.ljdelight.lights.generated.Location;
+import com.ljdelight.lights.generated.TaggedLocationWithMeta;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,12 +21,7 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import com.ljdelight.lights.generated.Center;
-import com.ljdelight.lights.generated.Comment;
-import com.ljdelight.lights.generated.Lights;
-import com.ljdelight.lights.generated.Location;
-import com.ljdelight.lights.generated.TaggedLocation;
-import com.ljdelight.lights.generated.TaggedLocationWithMeta;
+import java.util.List;
 
 public class LightsClient {
     private static final Logger logger = LogManager.getLogger(LightsClient.class);

@@ -5,6 +5,19 @@
 
 package com.ljdelight.lights;
 
+import com.ljdelight.lights.generated.Center;
+import com.ljdelight.lights.generated.Comment;
+import com.ljdelight.lights.generated.Lights;
+import com.ljdelight.lights.generated.Location;
+import com.ljdelight.lights.generated.Meta;
+import com.ljdelight.lights.generated.TaggedLocation;
+import com.ljdelight.lights.generated.TaggedLocationWithMeta;
+import com.ljdelight.lights.generated.Thing;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.thrift.TException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
@@ -18,18 +31,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.thrift.TException;
-
-import com.ljdelight.lights.generated.Center;
-import com.ljdelight.lights.generated.Comment;
-import com.ljdelight.lights.generated.Lights;
-import com.ljdelight.lights.generated.Location;
-import com.ljdelight.lights.generated.Meta;
-import com.ljdelight.lights.generated.TaggedLocation;
-import com.ljdelight.lights.generated.TaggedLocationWithMeta;
 
 public class LightsHandler implements Lights.Iface {
     private static final Logger logger = LogManager.getLogger(LightsHandler.class);
@@ -178,5 +179,46 @@ public class LightsHandler implements Lights.Iface {
                 }
             }
         }
+    }
+
+    @Override
+    public long upvoteThing(long token, Thing thing) throws TException {
+        logger.debug("In upvoteThing");
+        String table = "";
+        switch (thing.type) {
+            case COMMENT:
+                table = "comments";
+                break;
+            case LOCATION:
+                table = "locations";
+                break;
+            default:
+                throw new TException("thing type is not valid");
+        }
+
+        PreparedStatement statement = null;
+        try {
+            // TODO need to disallow duplicate votes from a single token.
+            statement = LightsHandler.connect().prepareStatement(
+                    "BEGIN; UPDATE ? SET votes=votes+1 WHERE id=?; COMMIT;");
+            statement.setString(1, table);
+            statement.setLong(2, thing.id);
+
+            statement.execute();
+        } catch (SQLException e) {
+            logger.error("Failed to connect to db");
+            throw new TException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                    logger.debug("Finished upvote for the table '" + table + "'");
+                } catch (SQLException e) {
+                    logger.error("Failed to close sql statement. Logging error and continuing.");
+                    // Log the error and keep going in this case
+                }
+            }
+        }
+        return 0;
     }
 }

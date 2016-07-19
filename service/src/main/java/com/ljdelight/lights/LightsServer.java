@@ -5,14 +5,14 @@
 
 package com.ljdelight.lights;
 
+import com.ljdelight.lights.generated.Lights;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.thrift.server.TNonblockingServer;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 import org.apache.thrift.transport.TNonblockingServerTransport;
-
-import com.ljdelight.lights.generated.Lights;
 
 public class LightsServer {
     private static final Logger logger = LogManager.getLogger(LightsServer.class);
