@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.ljdelight.lights.db.LightsDBHelper;
 import com.ljdelight.lights.generated.Center;
 import com.ljdelight.lights.generated.Location;
 import com.ljdelight.lights.generated.TaggedLocationWithMeta;

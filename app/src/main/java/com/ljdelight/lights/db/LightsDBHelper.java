@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ljdelight.lights.generated.Comment;
-import com.ljdelight.lights.generated.Lights;
 import com.ljdelight.lights.generated.Location;
 import com.ljdelight.lights.generated.Meta;
 import com.ljdelight.lights.generated.TaggedLocation;

@@ -2,8 +2,6 @@ package com.ljdelight.lights.db;
 
 import android.provider.BaseColumns;
 
-import com.ljdelight.lights.generated.Location;
-
 public class LightsContract {
     private LightsContract() {}
 
