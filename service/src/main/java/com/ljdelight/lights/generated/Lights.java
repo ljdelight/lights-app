@@ -43,6 +43,8 @@ public class Lights {
 
     public List<TaggedLocationWithMeta> getLocationsWithMetaNear(Center center) throws org.apache.thrift.TException;
 
+    public long upvoteThing(long token, Thing thing) throws org.apache.thrift.TException;
+
   }
 
   public interface AsyncIface {
@@ -52,6 +54,8 @@ public class Lights {
     public void getLocationsNear(Center center, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void getLocationsWithMetaNear(Center center, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+
+    public void upvoteThing(long token, Thing thing, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -141,6 +145,30 @@ public class Lights {
         return result.success;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getLocationsWithMetaNear failed: unknown result");
+    }
+
+    public long upvoteThing(long token, Thing thing) throws org.apache.thrift.TException
+    {
+      send_upvoteThing(token, thing);
+      return recv_upvoteThing();
+    }
+
+    public void send_upvoteThing(long token, Thing thing) throws org.apache.thrift.TException
+    {
+      upvoteThing_args args = new upvoteThing_args();
+      args.setToken(token);
+      args.setThing(thing);
+      sendBase("upvoteThing", args);
+    }
+
+    public long recv_upvoteThing() throws org.apache.thrift.TException
+    {
+      upvoteThing_result result = new upvoteThing_result();
+      receiveBase(result, "upvoteThing");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "upvoteThing failed: unknown result");
     }
 
   }
@@ -254,6 +282,41 @@ public class Lights {
       }
     }
 
+    public void upvoteThing(long token, Thing thing, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      upvoteThing_call method_call = new upvoteThing_call(token, thing, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class upvoteThing_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private long token;
+      private Thing thing;
+      public upvoteThing_call(long token, Thing thing, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.token = token;
+        this.thing = thing;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("upvoteThing", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        upvoteThing_args args = new upvoteThing_args();
+        args.setToken(token);
+        args.setThing(thing);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public long getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_upvoteThing();
+      }
+    }
+
   }
 
   public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
@@ -270,6 +333,7 @@ public class Lights {
       processMap.put("getAllLocations", new getAllLocations());
       processMap.put("getLocationsNear", new getLocationsNear());
       processMap.put("getLocationsWithMetaNear", new getLocationsWithMetaNear());
+      processMap.put("upvoteThing", new upvoteThing());
       return processMap;
     }
 
@@ -333,6 +397,27 @@ public class Lights {
       }
     }
 
+    public static class upvoteThing<I extends Iface> extends org.apache.thrift.ProcessFunction<I, upvoteThing_args> {
+      public upvoteThing() {
+        super("upvoteThing");
+      }
+
+      public upvoteThing_args getEmptyArgsInstance() {
+        return new upvoteThing_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public upvoteThing_result getResult(I iface, upvoteThing_args args) throws org.apache.thrift.TException {
+        upvoteThing_result result = new upvoteThing_result();
+        result.success = iface.upvoteThing(args.token, args.thing);
+        result.setSuccessIsSet(true);
+        return result;
+      }
+    }
+
   }
 
   public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
@@ -349,6 +434,7 @@ public class Lights {
       processMap.put("getAllLocations", new getAllLocations());
       processMap.put("getLocationsNear", new getLocationsNear());
       processMap.put("getLocationsWithMetaNear", new getLocationsWithMetaNear());
+      processMap.put("upvoteThing", new upvoteThing());
       return processMap;
     }
 
@@ -502,6 +588,58 @@ public class Lights {
 
       public void start(I iface, getLocationsWithMetaNear_args args, org.apache.thrift.async.AsyncMethodCallback<List<TaggedLocationWithMeta>> resultHandler) throws TException {
         iface.getLocationsWithMetaNear(args.center,resultHandler);
+      }
+    }
+
+    public static class upvoteThing<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, upvoteThing_args, Long> {
+      public upvoteThing() {
+        super("upvoteThing");
+      }
+
+      public upvoteThing_args getEmptyArgsInstance() {
+        return new upvoteThing_args();
+      }
+
+      public AsyncMethodCallback<Long> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<Long>() { 
+          public void onComplete(Long o) {
+            upvoteThing_result result = new upvoteThing_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
+          }
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            upvoteThing_result result = new upvoteThing_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, upvoteThing_args args, org.apache.thrift.async.AsyncMethodCallback<Long> resultHandler) throws TException {
+        iface.upvoteThing(args.token, args.thing,resultHandler);
       }
     }
 
@@ -2725,6 +2863,836 @@ public class Lights {
               struct.success.add(_elem30);
             }
           }
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class upvoteThing_args implements org.apache.thrift.TBase<upvoteThing_args, upvoteThing_args._Fields>, java.io.Serializable, Cloneable, Comparable<upvoteThing_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("upvoteThing_args");
+
+    private static final org.apache.thrift.protocol.TField TOKEN_FIELD_DESC = new org.apache.thrift.protocol.TField("token", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField THING_FIELD_DESC = new org.apache.thrift.protocol.TField("thing", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new upvoteThing_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new upvoteThing_argsTupleSchemeFactory());
+    }
+
+    public long token; // required
+    public Thing thing; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      TOKEN((short)1, "token"),
+      THING((short)2, "thing");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // TOKEN
+            return TOKEN;
+          case 2: // THING
+            return THING;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __TOKEN_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.TOKEN, new org.apache.thrift.meta_data.FieldMetaData("token", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.THING, new org.apache.thrift.meta_data.FieldMetaData("thing", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Thing.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(upvoteThing_args.class, metaDataMap);
+    }
+
+    public upvoteThing_args() {
+    }
+
+    public upvoteThing_args(
+      long token,
+      Thing thing)
+    {
+      this();
+      this.token = token;
+      setTokenIsSet(true);
+      this.thing = thing;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public upvoteThing_args(upvoteThing_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.token = other.token;
+      if (other.isSetThing()) {
+        this.thing = new Thing(other.thing);
+      }
+    }
+
+    public upvoteThing_args deepCopy() {
+      return new upvoteThing_args(this);
+    }
+
+    @Override
+    public void clear() {
+      setTokenIsSet(false);
+      this.token = 0;
+      this.thing = null;
+    }
+
+    public long getToken() {
+      return this.token;
+    }
+
+    public upvoteThing_args setToken(long token) {
+      this.token = token;
+      setTokenIsSet(true);
+      return this;
+    }
+
+    public void unsetToken() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TOKEN_ISSET_ID);
+    }
+
+    /** Returns true if field token is set (has been assigned a value) and false otherwise */
+    public boolean isSetToken() {
+      return EncodingUtils.testBit(__isset_bitfield, __TOKEN_ISSET_ID);
+    }
+
+    public void setTokenIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TOKEN_ISSET_ID, value);
+    }
+
+    public Thing getThing() {
+      return this.thing;
+    }
+
+    public upvoteThing_args setThing(Thing thing) {
+      this.thing = thing;
+      return this;
+    }
+
+    public void unsetThing() {
+      this.thing = null;
+    }
+
+    /** Returns true if field thing is set (has been assigned a value) and false otherwise */
+    public boolean isSetThing() {
+      return this.thing != null;
+    }
+
+    public void setThingIsSet(boolean value) {
+      if (!value) {
+        this.thing = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case TOKEN:
+        if (value == null) {
+          unsetToken();
+        } else {
+          setToken((Long)value);
+        }
+        break;
+
+      case THING:
+        if (value == null) {
+          unsetThing();
+        } else {
+          setThing((Thing)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case TOKEN:
+        return getToken();
+
+      case THING:
+        return getThing();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case TOKEN:
+        return isSetToken();
+      case THING:
+        return isSetThing();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof upvoteThing_args)
+        return this.equals((upvoteThing_args)that);
+      return false;
+    }
+
+    public boolean equals(upvoteThing_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_token = true;
+      boolean that_present_token = true;
+      if (this_present_token || that_present_token) {
+        if (!(this_present_token && that_present_token))
+          return false;
+        if (this.token != that.token)
+          return false;
+      }
+
+      boolean this_present_thing = true && this.isSetThing();
+      boolean that_present_thing = true && that.isSetThing();
+      if (this_present_thing || that_present_thing) {
+        if (!(this_present_thing && that_present_thing))
+          return false;
+        if (!this.thing.equals(that.thing))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      List<Object> list = new ArrayList<Object>();
+
+      boolean present_token = true;
+      list.add(present_token);
+      if (present_token)
+        list.add(token);
+
+      boolean present_thing = true && (isSetThing());
+      list.add(present_thing);
+      if (present_thing)
+        list.add(thing);
+
+      return list.hashCode();
+    }
+
+    @Override
+    public int compareTo(upvoteThing_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetToken()).compareTo(other.isSetToken());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetToken()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.token, other.token);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetThing()).compareTo(other.isSetThing());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetThing()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.thing, other.thing);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("upvoteThing_args(");
+      boolean first = true;
+
+      sb.append("token:");
+      sb.append(this.token);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("thing:");
+      if (this.thing == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.thing);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (thing != null) {
+        thing.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class upvoteThing_argsStandardSchemeFactory implements SchemeFactory {
+      public upvoteThing_argsStandardScheme getScheme() {
+        return new upvoteThing_argsStandardScheme();
+      }
+    }
+
+    private static class upvoteThing_argsStandardScheme extends StandardScheme<upvoteThing_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, upvoteThing_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // TOKEN
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.token = iprot.readI64();
+                struct.setTokenIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // THING
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.thing = new Thing();
+                struct.thing.read(iprot);
+                struct.setThingIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, upvoteThing_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(TOKEN_FIELD_DESC);
+        oprot.writeI64(struct.token);
+        oprot.writeFieldEnd();
+        if (struct.thing != null) {
+          oprot.writeFieldBegin(THING_FIELD_DESC);
+          struct.thing.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class upvoteThing_argsTupleSchemeFactory implements SchemeFactory {
+      public upvoteThing_argsTupleScheme getScheme() {
+        return new upvoteThing_argsTupleScheme();
+      }
+    }
+
+    private static class upvoteThing_argsTupleScheme extends TupleScheme<upvoteThing_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, upvoteThing_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetToken()) {
+          optionals.set(0);
+        }
+        if (struct.isSetThing()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetToken()) {
+          oprot.writeI64(struct.token);
+        }
+        if (struct.isSetThing()) {
+          struct.thing.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, upvoteThing_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.token = iprot.readI64();
+          struct.setTokenIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.thing = new Thing();
+          struct.thing.read(iprot);
+          struct.setThingIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class upvoteThing_result implements org.apache.thrift.TBase<upvoteThing_result, upvoteThing_result._Fields>, java.io.Serializable, Cloneable, Comparable<upvoteThing_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("upvoteThing_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new upvoteThing_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new upvoteThing_resultTupleSchemeFactory());
+    }
+
+    public long success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(upvoteThing_result.class, metaDataMap);
+    }
+
+    public upvoteThing_result() {
+    }
+
+    public upvoteThing_result(
+      long success)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public upvoteThing_result(upvoteThing_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+    }
+
+    public upvoteThing_result deepCopy() {
+      return new upvoteThing_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = 0;
+    }
+
+    public long getSuccess() {
+      return this.success;
+    }
+
+    public upvoteThing_result setSuccess(long success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Long)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof upvoteThing_result)
+        return this.equals((upvoteThing_result)that);
+      return false;
+    }
+
+    public boolean equals(upvoteThing_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true;
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
+
+      return list.hashCode();
+    }
+
+    @Override
+    public int compareTo(upvoteThing_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("upvoteThing_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class upvoteThing_resultStandardSchemeFactory implements SchemeFactory {
+      public upvoteThing_resultStandardScheme getScheme() {
+        return new upvoteThing_resultStandardScheme();
+      }
+    }
+
+    private static class upvoteThing_resultStandardScheme extends StandardScheme<upvoteThing_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, upvoteThing_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.success = iprot.readI64();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, upvoteThing_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeI64(struct.success);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class upvoteThing_resultTupleSchemeFactory implements SchemeFactory {
+      public upvoteThing_resultTupleScheme getScheme() {
+        return new upvoteThing_resultTupleScheme();
+      }
+    }
+
+    private static class upvoteThing_resultTupleScheme extends TupleScheme<upvoteThing_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, upvoteThing_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeI64(struct.success);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, upvoteThing_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readI64();
           struct.setSuccessIsSet(true);
         }
       }

@@ -37,6 +37,8 @@ public class LightsHandler implements Lights.Iface {
     private static volatile Connection s_connection = null;
 
     private static Connection connect() throws SQLException {
+        // TODO Ohk it turns out this isn't the "right" way to create a shared db connection.
+        // Instead this should be a DataSource using a pooled backend.
         if (s_connection == null) {
             synchronized (LightsHandler.class) {
                 if (s_connection == null) {
@@ -45,7 +47,7 @@ public class LightsHandler implements Lights.Iface {
                     try (InputStream stream = LightsHandler.class.getResourceAsStream(
                                  "/database.properties")) {
                         p.load(stream);
-                    } catch (IOException e) {
+                    } catch (IOException | NullPointerException e) {
                         throw new RuntimeException("Could not read database.properties", e);
                     }
 
@@ -199,12 +201,14 @@ public class LightsHandler implements Lights.Iface {
         PreparedStatement statement = null;
         try {
             // TODO need to disallow duplicate votes from a single token.
+            LightsHandler.connect();
             statement = LightsHandler.connect().prepareStatement(
-                    "BEGIN; UPDATE ? SET votes=votes+1 WHERE id=?; COMMIT;");
-            statement.setString(1, table);
-            statement.setLong(2, thing.id);
+                    "begin; UPDATE " + table + " SET votes=votes+1 WHERE id=?; commit;");
+            statement.setLong(1, thing.id);
+            logger.debug("Upvote thing sql is " + statement.toString());
 
             statement.execute();
+            logger.debug("Finished upvote for the table '" + table + "'");
         } catch (SQLException e) {
             logger.error("Failed to connect to db");
             throw new TException(e);
@@ -212,10 +216,9 @@ public class LightsHandler implements Lights.Iface {
             if (statement != null) {
                 try {
                     statement.close();
-                    logger.debug("Finished upvote for the table '" + table + "'");
                 } catch (SQLException e) {
-                    logger.error("Failed to close sql statement. Logging error and continuing.");
                     // Log the error and keep going in this case
+                    logger.error("Failed to close sql statement. Logging error and continuing.");
                 }
             }
         }

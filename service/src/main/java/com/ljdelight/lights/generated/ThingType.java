@@ -6,39 +6,40 @@
  */
 package com.ljdelight.lights.generated;
 
+
 import java.util.Map;
 import java.util.HashMap;
 import org.apache.thrift.TEnum;
 
-public enum ThingType implements org
-.apache.thrift.TEnum {
-    LOCATION(1), COMMENT(2);
+public enum ThingType implements org.apache.thrift.TEnum {
+  LOCATION(1),
+  COMMENT(2);
 
-    private final int value;
+  private final int value;
 
-    private ThingType(int value) {
-        this.value = value;
+  private ThingType(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static ThingType findByValue(int value) { 
+    switch (value) {
+      case 1:
+        return LOCATION;
+      case 2:
+        return COMMENT;
+      default:
+        return null;
     }
-
-    /**
-     * Get the integer value of this enum value, as defined in the Thrift IDL.
-     */
-    public int getValue() {
-        return value;
-    }
-
-    /**
-     * Find a the enum type by its integer value, as defined in the Thrift IDL.
-     * @return null if the value is not found.
-     */
-    public static ThingType findByValue(int value) {
-        switch (value) {
-            case 1:
-                return LOCATION;
-            case 2:
-                return COMMENT;
-            default:
-                return null;
-        }
-    }
+  }
 }
